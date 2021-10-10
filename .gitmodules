@@ -1,0 +1,3 @@
+[submodule "Computational-Math"]
+	path = Computational-Math
+	url = git@github.com:Dimanteo/Computational-Math.git
