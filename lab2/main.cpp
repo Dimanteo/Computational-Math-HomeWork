@@ -1,9 +1,9 @@
 // Колобаев Дмитрий гр Б01-909
 // Вариант Ж
 
-#include <iostream>
 #include "LinearSystem.hpp"
 #include "Solvers.hpp"
+#include <iostream>
 
 using namespace coma;
 
@@ -25,16 +25,30 @@ int main() {
     size_t dimension = 10;
     LinearSystem LS(dimension);
     fillSystem(LS);
+    LinearSystem LScopy(LS);
+    std::cout << LS << "\n";
+
     Matrix A = LS.matrix();
     Vector F = LS.consts();
-    std::cout << LS << "\n";
-    GaussSolver solver(&LS);
-    Vector x = solver.solve();
-    std::cout << x << "\n";
-    Vector r = A * x - F;
-    std::cout << "Невязка r\n"
-    << r << "\n";
+    std::cout << "Обусловленность:" << A.norm() * A.adjoint().norm() << "\n";
+
+    std::cout << "Метод Гаусса\n";
+    GaussSolver Gsolver(&LS);
+    Vector Gx = Gsolver.solve();
+    std::cout << Gx << "\n";
+
+    Vector r = A * Gx - F;
+    std::cout << "Невязка r\n" << r << "\n";
     std::cout << "Норма невязки ||r||\n" << r.norm() << "\n";
-    std::cout << std::endl;
+
+    std::cout << "Метод Зейделя\n";
+    fillSystem(LScopy);
+    SeidelSolver Ssolver(&LS);
+    Vector Sx = Ssolver.solve(1e-3);
+    std::cout << Sx << "\n";
+
+    r = A * Sx - F;
+    std::cout << "Невязка r\n" << r << "\n";
+    std::cout << "Норма невязки ||r||\n" << r.norm() << "\n";
     return 0;
 }
