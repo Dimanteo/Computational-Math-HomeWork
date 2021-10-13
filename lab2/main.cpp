@@ -22,17 +22,16 @@ static void fillSystem(LinearSystem &LS) {
 }
 
 int main() {
-    size_t dimension = 10;
+    size_t dimension = 100;
     LinearSystem LS(dimension);
     fillSystem(LS);
     LinearSystem LScopy(LS);
-    std::cout << LS << "\n";
 
     Matrix A = LS.matrix();
     Vector F = LS.consts();
-    std::cout << "Обусловленность:" << A.norm() * A.adjoint().norm() << "\n";
+    std::cout << "Обусловленность:" << A.norm() * A.inverse().norm() << "\n";
 
-    std::cout << "Метод Гаусса\n";
+    std::cout << "\n### Метод Гаусса ###\n";
     GaussSolver Gsolver(&LS);
     Vector Gx = Gsolver.solve();
     std::cout << Gx << "\n";
@@ -41,9 +40,8 @@ int main() {
     std::cout << "Невязка r\n" << r << "\n";
     std::cout << "Норма невязки ||r||\n" << r.norm() << "\n";
 
-    std::cout << "Метод Зейделя\n";
-    fillSystem(LScopy);
-    SeidelSolver Ssolver(&LS);
+    std::cout << "\n### Метод Зейделя ###\n";
+    SeidelSolver Ssolver(&LScopy);
     Vector Sx = Ssolver.solve(1e-3);
     std::cout << Sx << "\n";
 
