@@ -15,6 +15,5 @@ include_directories("${CMAKE_CURRENT_LIST_DIR}/Computational-Math")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 add_subdirectory(Computational-Math)
-add_subdirectory(lab2)
-add_subdirectory(lab3)
-add_subdirectory(lab4)
+#add_subdirectory(1_sem)
+add_subdirectory(2_sem)
