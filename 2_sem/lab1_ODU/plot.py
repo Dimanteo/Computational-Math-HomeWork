@@ -1,4 +1,4 @@
-from cProfile import label
+import sys
 import matplotlib.pyplot as plt
 import csv
 
@@ -33,13 +33,16 @@ def plotData(lbl_data, figx=12, figy=4, title=''):
     plt.show()
 
 
-def main():
-    with open('solution.csv', 'r') as csv_data:
-        table = csv.reader(csv_data)
+def plot_from_csv(path):
+    with open(path, 'r') as csv_data:
+        table = csv.reader(csv_data, delimiter=';')
         labeled_data = {'t' : [], 'z(t)' : [], 'x(t)' : []}
         assignRows(labeled_data, table)
         plotData(labeled_data)
         
 
 if __name__ == '__main__':
-    main()
+    path = 'solution.csv'
+    if len(sys.argv) > 1:
+        path = sys.argv[1]
+    plot_from_csv(path)

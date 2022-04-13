@@ -2,12 +2,18 @@
 #include <Dumper.hpp>
 #include <FunctionMatrix.hpp>
 #include <RKS.hpp>
+#include <stdlib.h>
+#include <iostream>
 
 using namespace coma;
 
 int main(int argc, char **argv) {
     // Parameters
-    numb_t e = 1;
+    if (argc < 2) {
+        std::cerr << "Enter parameter e\n";
+        exit(1);
+    }
+    numb_t e = strtold(argv[1], nullptr);
     numb_t t_max = 100;
     numb_t step = 1;
     // Equation system: u' = f(x, z)
@@ -32,11 +38,17 @@ int main(int argc, char **argv) {
     solver.setEulerMethod();
     auto solveTable = solver.solve(init_v, step, static_cast<size_t>(t_max / step));
     std::ofstream ofstr;
-    if (argc == 1) {
-        ofstr.open("solution.csv");
-    } else {
-        ofstr.open(argv[1]);
+    ofstr.open("rc1.csv");
+    // Add t to Vector
+    size_t dim = solveTable[0].size() + 1;
+    std::vector<Vector> plotData(solveTable.size());
+    for (size_t vi = 0; vi < plotData.size(); vi++) {
+        plotData[vi].resize(dim);
+        plotData[vi](0) = step * vi;
+        for (size_t c = 1; c < dim; c++) {
+            plotData[vi](c) = solveTable[vi](c - 1);
+        }
     }
-    Dumper::serialize(solveTable, ofstr);
+    Dumper::serialize(plotData, ofstr);
     return 0;
 }
