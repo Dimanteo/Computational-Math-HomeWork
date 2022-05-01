@@ -54,25 +54,56 @@ def data_from_csv(path):
     with open(path, 'r') as csv_data:
         table = csv.reader(csv_data, delimiter=',')
         # x = y, z = y'
-        labeled_data = {'y' : [], "y'" : []}
+        labeled_data = {'y' : [], "y'" : [], 't' : []}
         assignRows(labeled_data, table)
         return labeled_data
 
 
-def run(path):
+def time_decorator(data):
+    timeddata = {
+        't' : data['t'],
+        "y" : data["y"]
+    }
+    return timeddata
+
+
+def phase_decorator(data):
+    phasedata = {
+        'y' : data['y'],
+        "y'" : data["y'"]
+    }
+    return phasedata
+
+
+def run(input_files):
     params = [0.01, 0.1, 1, 2, 4, 8, 16, 32, 64, 80, 90, 100]
-    fig, axis = plt.subplots(4, 3)
-    fig.set_size_inches(12, 10)
-    fig.suptitle(path)
-    for e, ax in zip(params, axis.flat):
+    method_plot = {}
+    time_plot = {}
+    for file in input_files:
+        for plot in [method_plot, time_plot]:
+            plot[file] = plt.subplots(4, 3)
+            fig, axis = plot[file]
+            fig.set_size_inches(12, 10)
+            fig.tight_layout()
+    for e in params:
         print('Calculating for e = {}'.format(e))
         subprocess.run(['./build/odu_lab1', str(e)])
-        data = data_from_csv(path)
-        addSubplot(ax, data, title="$e = {}$".format(e))
+        for file in input_files:
+            for plot, decor in [(method_plot, phase_decorator), (time_plot, time_decorator)]:
+                fig, axis = plot[file]
+                data = data_from_csv(file + '.csv')
+                pltdata = decor(data)
+                addSubplot(axis.flat[params.index(e)], pltdata, title="$e = {}$".format(e))
+    for file in input_files:
+        fig, _ = method_plot[file]
+        fig.savefig(file + '.png', dpi=100)
+        fig, _ = time_plot[file]
+        fig.savefig('time_' + file + '.png', dpi=100)
 
 
 if __name__ == '__main__':
-    files = ['rk2.csv', 'rk3.csv', 'rk4.csv']
-    for path in files:
-        run(path)
-    plt.show()
+    # rk - Runge-Kutta
+    # ad - Adams
+    files = ['rk1', 'rk2', 'rk3', 'rk4', 'ad2', 'ad3', 'ad4']
+    run(files)
+    # plt.show()
