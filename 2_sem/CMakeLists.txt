@@ -1,1 +1,2 @@
 add_subdirectory(lab1_ODU)
+add_subdirectory(lab2_implicit)

@@ -48,13 +48,7 @@ int main(int argc, char **argv) {
     auto solveAndDump = [&](const char *output_csv, ODUSolver &solver) {
         auto solveTable = solver.solve(init_v, step, static_cast<size_t>(t_max / step));
         ofstr.open(output_csv);
-        size_t dim = solveTable[0].size() + 1;
-        std::vector<Vector> plotData(solveTable.size());
-        for (size_t vi = 0; vi < plotData.size(); vi++) {
-            plotData[vi].resize(dim);
-            plotData[vi] << solveTable[vi], static_cast<numb_t>(vi) * step;
-        }
-        Dumper::serialize(plotData, ofstr);
+        Dumper::serialize(solveTable, ofstr);
         ofstr.close();
     };
 

@@ -1,0 +1,2 @@
+add_executable(implicit_lab2 main.cpp)
+target_link_libraries(implicit_lab2 coma)
