@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
     RungeKuttSolver rk_solver(&f);
     std::ofstream ofstr;
 
-    auto solveAndDump = [&](const char *output_csv, ODUSolver &solver) {
+    auto solveAndDump = [&](const char *output_csv, ODESolver &solver) {
         auto solveTable = solver.solve(init_v, step, static_cast<size_t>(t_max / step));
         ofstr.open(output_csv);
         Dumper::serialize(solveTable, ofstr);
