@@ -1,0 +1,88 @@
+
+\documentclass[a4paper,12pt]{article} % тип документа
+
+% report, book
+
+%  Русский язык
+
+\usepackage[T2A]{fontenc}			% кодировка
+\usepackage[utf8]{inputenc}			% кодировка исходного текста
+\usepackage[english,russian]{babel}	% локализация и переносы
+
+
+% Математика
+\usepackage{amsmath,amsfonts,amssymb,amsthm,mathtools}
+
+%форматирование
+\usepackage{float}
+\usepackage{geometry}
+%Рисунки
+\usepackage{graphicx}
+\usepackage{wrapfig}
+
+\usepackage{hyperref}
+\usepackage[rgb]{xcolor}
+\hypersetup{
+	colorlinks = true,
+	urlcolor = blue
+}
+
+\usepackage{wasysym}
+
+%Заговолок
+\author{Колобаев Дмитрий\\Группа Б01-903}
+\title{Лабораторная работа №1 \\ОДУ} % Номер и название работы
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{flushleft}
+	\textbf{Задание X.9.9}: \\
+	Модель химической реакции из, получившая свое название Е5 в более ранних публикациях:
+	\begin{align*}
+		\dot{y_1} = & -Ay_1 - By_1y_3, \\
+		\dot{y_2} = & Ay_1 - MCy_2y_3, \\
+		\dot{y_3} = & Ay_1 - By_1y_3 - MCy_2y_3 + Cy_4, \\
+		\dot{y_4} = & By_1y_3 - Cy_4
+	\end{align*}
+\end{flushleft}
+
+Начальные условия: $y_1(0) = 1,76\cdot 10^{-3}$, все остальные переменные равны 0. Значения коэффициентов модели следующие: $A=7,89\cdot 10{-10}$, $B=1,1\cdot 10^{7}$, $C=1,13\cdot 10^{3}$, $M = 10^6$. Первоначально задача ставилась на отрезке $T_k = 1000$, но впоследствии было обнаружено, что она обладает нетривиальными свойствами вплоть до времени $T_k=10^{13}$.
+
+\section*{Метод решения}
+
+Воспользуемся одноитерационным методом Розенброка третьего порядка точности. Он имеет следующий вид (Петров, Лобанов "Лекции по вычислительной математике").
+
+\begin{equation}
+	(\textbf{E} -a\tau \textbf{J} - b\tau^2\textbf{J}^2)\frac{\textbf{u}_{n+1} - \textbf{u}_n}{\tau} = f[\textbf{u}_n + c\tau \textbf{f}(\textbf{u}_n)]
+	\label{eq:rosenbrok}
+\end{equation}
+
+Здесь $J = \frac{\partial f}{\partial u}(u_n)$ - матрица якоби. Параметры подобраны так, чтобы обеспечить 3 порядок точности:
+$$a = 1,077; b = -0,372; c = -0,577$$
+
+Выражая $y_{n+1}$ из формулы \ref{eq:rosenbrok} получаем значение на следующей стадии.
+
+\section*{Результаты}
+
+Результаты вычислений представлены на рисунках ниже. Стоит отметить, что концентрации всех реагентов остаются маленькими. Однако если 2, 3 и 4 растут, то концентрация реагента 1 очень медленно уменьшается со временем.
+
+\section*{Программная реализация}
+
+Имплементацию использованного метода Розенброка можно найти в файлах Rosenbrok.cpp и Rosenbrok.hpp
+
+\newcommand{\plot}[1]{
+\begin{figure}[H]
+	\includegraphics[width=\textwidth]{y#1.png}
+\end{figure}
+}
+
+\plot{1}
+\plot{2}
+\plot{3}
+\plot{4}
+
+
+
+\end{document}

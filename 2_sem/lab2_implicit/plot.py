@@ -57,6 +57,8 @@ def run(input_file):
         if y == 't':
             continue
         plotData(time, lbl_data[y], xlbl='t', ylbl=y, title=y+'(t)')
+        if y == 'y1':
+            plt.ylim(0.0017, 0.0018)
         plt.savefig(y + '.png', dpi=100)
 
 
