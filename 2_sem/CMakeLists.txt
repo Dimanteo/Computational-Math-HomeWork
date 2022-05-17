@@ -1,2 +1,3 @@
 add_subdirectory(lab1_ODU)
 add_subdirectory(lab2_implicit)
+add_subdirectory(lab3_shootout)
